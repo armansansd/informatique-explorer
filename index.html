@@ -10,19 +10,68 @@
 	</script>
 </head>
 <body>
+<ul class='menu'></ul>
 <p>
 My glog
 
-it will be a blog about computer interface and human behavior.
-This page is a test, there will be more of them named "in the beginning"
+it will be a blog about "informatique" a very usefull french word.
 </p>
 <script>
 // Create a new request object
+var commit = new Object();
+var list = new Object();
+
+$(document).ready(function(){
+	console.log("what's up doc ?");
+
+
+	function creatObjects(a) {
+	  var responseObj = JSON.parse(a);	  
+
+	  //console.log(a);
+	  responseObj.forEach(function(entry) {    	
+    	var date = entry.commit.author.date;
+    	var message = entry.commit.message;
+    	var sha = entry.commit.tree.sha;
+    	commit["sha"] = sha;
+    	commit["m"] = message;
+    	//console.log(list)
+    	list[date] = commit;
+    	console.log(list);
+		});
+		//console.log(list);		
+	}
+	
+	function menu(){
+		var menu = $("ul .menu");
+
+		$.each(list, function(index, value) {
+			//var li = "<li>"+value.m+"</li>";
+			//console.log(value.m);
+    	//console.log(index);
+		}); 
+	}
+	var request = new XMLHttpRequest();
+	//request.onload = creatObjects;
+	request.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      creatObjects(this.responseText);
+      menu();
+    }
+  };
+	request.open('get', 'https://api.github.com/repos/armansansd/informatique-explorer/commits', false);
+	request.send();
+
+
+
+});
 
 //list repo
 //https://api.github.com/repos/armansansd/informatique-explorer
 //list of commits
 //https://api.github.com/repos/armansansd/informatique-explorer/commits
+//raw url 
+//https://github.com/armansansd/informatique-explorer/raw/5edc6fe3d9580ad644b928b31b200ebf694ce16f/text.md
 </script>
 </body>
 </html>
